@@ -17,21 +17,69 @@
 
 package org.apache.geode.benchmark.tests;
 
+import static org.apache.geode.benchmark.parameters.BenchmarkParameters.BENCHMARK_DURATION;
+import static org.apache.geode.benchmark.parameters.BenchmarkParameters.KEY_RANGE;
+import static org.apache.geode.benchmark.parameters.BenchmarkParameters.LOCATOR_PORT;
 import static org.apache.geode.benchmark.parameters.BenchmarkParameters.Roles.SERVER;
+import static org.apache.geode.benchmark.parameters.BenchmarkParameters.WARM_UP_TIME;
+import static org.apache.geode.benchmark.parameters.JVMParameters.JVM_ARGS;
 
+import org.junit.Test;
+
+import org.apache.geode.benchmark.configurations.BenchmarkWorkload;
+import org.apache.geode.benchmark.configurations.ClientRegion;
+import org.apache.geode.benchmark.configurations.ClientServerTopology;
+import org.apache.geode.benchmark.configurations.ConfigurationFactory;
+import org.apache.geode.benchmark.configurations.PreBenchmarkWorload;
+import org.apache.geode.benchmark.configurations.ServerRegion;
+import org.apache.geode.benchmark.tasks.CreateClientProxyRegion;
 import org.apache.geode.benchmark.tasks.CreatePartitionedRegion;
+import org.apache.geode.benchmark.tasks.PrePopulateRegion;
+import org.apache.geode.perftest.PerformanceTest;
 import org.apache.geode.perftest.TestConfig;
+import org.apache.geode.perftest.TestRunners;
 
-public class PartitionedPutBenchmark extends PutBenchmark {
+public class PartitionedPutBenchmark implements PerformanceTest {
 
-  public PartitionedPutBenchmark() {}
-
-  PartitionedPutBenchmark(long keyRange) {
-    this.keyRange = keyRange;
+  @Test
+  public void run() throws Exception {
+    TestRunners.defaultRunner().runTest(this);
   }
 
   @Override
-  void createRegion(TestConfig config) {
-    config.before(new CreatePartitionedRegion(), SERVER);
+  public TestConfig configure() {
+    ClientServerTopology clientServerTopology = new ClientServerTopology()
+        .setNumberOfClient(1)
+        .setNumberOfServers(2)
+        .setNumberOfClient(1)
+        .setKeyRange(KEY_RANGE)
+        .setClientJVMArgs(JVM_ARGS)
+        .setServerJVMArgs(JVM_ARGS)
+        .setLocatorJVMArgs(JVM_ARGS)
+        .setLocatorPort(LOCATOR_PORT);
+
+    ServerRegion serverRegion = new ServerRegion()
+        .setRegionCreationTask(new CreatePartitionedRegion("region"));
+
+    ClientRegion clientRegion = new ClientRegion()
+        .setClientRegionCreationTask(new CreateClientProxyRegion());
+
+    PreBenchmarkWorload preBenchmarkWorload = new PreBenchmarkWorload()
+        .setWorkLoad(new PrePopulateRegion(KEY_RANGE));
+
+    BenchmarkWorkload benchmarkWorkload = new BenchmarkWorkload()
+        .setBenchmarkDuration(BENCHMARK_DURATION)
+        .setWarmupDuration(WARM_UP_TIME);
+
+    return new ConfigurationFactory()
+        .setClientServerTopology(clientServerTopology)
+        .setServerRegion(serverRegion)
+        .setClientRegion(clientRegion)
+        .setPreBenchmarkWorload(preBenchmarkWorload)
+        .setBenchmarkWorkload(benchmarkWorkload)
+        .create();
+
+
+
   }
 }

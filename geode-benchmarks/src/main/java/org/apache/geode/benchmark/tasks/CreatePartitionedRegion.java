@@ -27,9 +27,15 @@ import org.apache.geode.perftest.TestContext;
  */
 public class CreatePartitionedRegion implements Task {
 
+  String regionName;
+
+  public CreatePartitionedRegion(String regionName) {
+    this.regionName = regionName;
+  }
+
   @Override
   public void run(TestContext context) throws Exception {
     Cache cache = (Cache) context.getAttribute(SERVER_CACHE);
-    cache.createRegionFactory(RegionShortcut.PARTITION).create("region");
+    cache.createRegionFactory(RegionShortcut.PARTITION).create(this.regionName);
   }
 }
