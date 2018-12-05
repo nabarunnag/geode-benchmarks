@@ -33,6 +33,6 @@ public class PartitionedPutBenchmarkTest {
   @Test
   public void benchmarkRunsSuccessfully() throws Exception {
     TestRunners.minimalRunner(folder.newFolder())
-        .runTest(new PartitionedPutBenchmark(KEY_RANGE_FOR_MINIMAL_RUNNER)::configure);
+        .runTest(new PartitionedPutBenchmark(KEY_RANGE_FOR_MINIMAL_RUNNER));
   }
 }

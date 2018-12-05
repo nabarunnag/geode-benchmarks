@@ -29,6 +29,6 @@ public class PartitionedGetBenchmarkTest {
   @Test
   public void benchmarkRunsSuccessfully() throws Exception {
     TestRunners.minimalRunner(folder.newFolder())
-        .runTest(new PartitionedGetBenchmark(KEY_RANGE_FOR_MINIMAL_RUNNER)::configure);
+        .runTest(new PartitionedGetBenchmark(KEY_RANGE_FOR_MINIMAL_RUNNER));
   }
 }
