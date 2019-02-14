@@ -56,8 +56,8 @@ public class ExecuteParameterizedFunction extends BenchmarkDriverAdapter impleme
 
   @Override
   public boolean test(Map<Object, Object> ctx) throws Exception {
-    long minId = ThreadLocalRandom.current().nextLong(0, this.keyRange - functionIDRange);
-    long maxId = minId + functionIDRange;
+    long minId = ThreadLocalRandom.current().nextLong(0, this.keyRange - 2);
+    long maxId = minId + 2;
     Map<String, Long> argumentMap = new HashMap<>();
     argumentMap.put("maxID", maxId);
     argumentMap.put("minID", minId);

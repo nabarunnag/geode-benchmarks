@@ -51,8 +51,8 @@ public class ExecuteFunction extends BenchmarkDriverAdapter implements Serializa
 
   @Override
   public boolean test(Map<Object, Object> ctx) throws Exception {
-    long minId = ThreadLocalRandom.current().nextLong(0, this.keyRange - functionIDRange);
-    long maxId = minId + functionIDRange;
+    long minId = ThreadLocalRandom.current().nextLong(0, this.keyRange - 2);
+    long maxId = minId + 2;
     Function function = new BenchmarkFunction(minId, maxId);
     FunctionService.registerFunction(function);
     ResultCollector resultCollector = FunctionService.onRegion(region).execute(function);

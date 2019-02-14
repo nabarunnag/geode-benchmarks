@@ -60,8 +60,8 @@ public class ExecuteFilteredFunction extends BenchmarkDriverAdapter implements S
 
   @Override
   public boolean test(Map<Object, Object> ctx) throws Exception {
-    long minId = ThreadLocalRandom.current().nextLong(0, this.keyRange - filterRange);
-    long maxId = minId + filterRange;
+    long minId = ThreadLocalRandom.current().nextLong(0, this.keyRange - 2);
+    long maxId = minId + 2;
     Set<Long> filterSet = new HashSet<>();
     for (long i = minId; i <= maxId; i++) {
       filterSet.add(i);
